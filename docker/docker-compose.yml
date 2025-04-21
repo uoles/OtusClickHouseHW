@@ -4,7 +4,6 @@ name: kafka
 services:
   clickhouse-server:
     container_name: uoles-clickhouse-udf-25
-    build: .
     image: uoles/clickhouse:25.2.1
     environment:
       CLICKHOUSE_DB: my_database 
