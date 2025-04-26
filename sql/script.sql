@@ -1,81 +1,113 @@
-CREATE TABLE my_database.uk_price_paid  
-(  
-    price UInt32,
-    date Date,
-    postcode1 LowCardinality(String),
-    postcode2 LowCardinality(String),
-    type Enum8('terraced' = 1, 'semi-detached' = 2, 'detached' = 3, 'flat' = 4, 'other' = 0),
-    is_new UInt8,
-    duration Enum8('freehold' = 1, 'leasehold' = 2, 'unknown' = 0),
-    addr1 String,
-    addr2 String,
-    street LowCardinality(String),
-    locality LowCardinality(String),
-    town LowCardinality(String),
-    district LowCardinality(String),
-    county LowCardinality(String)
-)  
-ENGINE = MergeTree  
-ORDER BY (postcode1, postcode2, addr1, addr2);
+CREATE TABLE my_database.transactions (
+	transaction_id UInt32,
+	user_id UInt32,
+	product_id UInt32,
+	quantity UInt8,
+	price Float32,
+	transaction_date Date
+) ENGINE = MergeTree()
+ORDER BY (transaction_id);
+
+INSERT INTO my_database.transactions 
+SELECT
+    --floor(randNormal(100000000, 1000000)),
+	100000000 + number,
+    randNormal(10000, 500),
+    randNormal(1000, 200),
+	randNormal(50, 20),
+	round(randNormal(1000, 5), 2),
+	now() - randUniform(1, 1000000.)
+FROM numbers(1000000);
+
+truncate table my_database.transactions
+
+select *
+from my_database.transactions
+
+----------------
+
+-- Рассчитайте общий доход от всех операций.
+select sum(price) 
+from my_database.transactions
+
+-- Найдите средний доход с одной сделки.
+select avg(price / quantity), transaction_id
+from my_database.transactions
+group by transaction_id
+
+-- Определите общее количество проданной продукции.
+select sum(quantity)
+from my_database.transactions
+
+-- Подсчитайте количество уникальных пользователей, совершивших покупку.
+select count(distinct user_id)
+from my_database.transactions
+
+----------------
+
+-- Преобразуйте `transaction_date` в строку формата `YYYY-MM-DD`.
+select formatDateTime(transaction_date, '%Y-%m-%d') as NewDateTime, transaction_date
+from my_database.transactions
+
+select formatDateTime(now(), '%Y-%m-%d %H:%M:%S')
 
 
 
-INSERT INTO my_database.uk_price_paid  
-WITH  
-	splitByChar(' ', postcode) AS p  
-SELECT  
-	toUInt32(price_string) AS price,  
-	parseDateTimeBestEffortUS(time) AS date,  
-	p[1] AS postcode1,  
-	p[2] AS postcode2,  
-	transform(a, ['T', 'S', 'D', 'F', 'O'], ['terraced', 'semi-detached', 'detached', 'flat', 'other']) AS type,  
-	b = 'Y' AS is_new,  
-	transform(c, ['F', 'L', 'U'], ['freehold', 'leasehold', 'unknown']) AS duration,  
-	addr1,  
-	addr2,  
-	street,  
-	locality,  
-	town,  
-	district,  
-	county  
-FROM url(  
-	'http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-complete.csv',  
-	'CSV',  
-	'uuid_string String,  
-	price_string String,  
-	time String,  
-	postcode String,  
-	a String,  
-	b String,  
-	c String,  
-	addr1 String,  
-	addr2 String,  
-	street String,  
-	locality String,  
-	town String,  
-	district String,  
-	county String,  
-	d String,  
-	e String'  
-) SETTINGS max_http_get_redirects=10;
+-- Извлеките год и месяц из `transaction_date`.
+select toYear(transaction_date) AS Year, 
+	toMonth(transaction_date) AS Month,
+	transaction_date
+from my_database.transactions
+
+SELECT toDateTime('2021-04-21 10:20:30', 'Europe/Moscow') AS Time
+
+SELECT toYear(now())
+
+SELECT toMonth(now())
 
 
-select count(1)
-from my_database.uk_price_paid  
+-- Округлите `price` до ближайшего целого числа.
+select round(price, 0), price
+from my_database.transactions
+
+SELECT round(123.4, 0) as res;
+
+SELECT round(123.5, 0) as res;
 
 
-max_rows_to_read
-max_memory_usage
-max_memory_usage_for_user
-max_server_memory_usage
-max_result_rows
-max_concurrent_queries_for_user
+
+-- Преобразуйте `transaction_id` в строку.
+select toString(transaction_id), transaction_id
+from my_database.transactions
 
 
-SELECT getSetting('max_memory_usage');
+----------------
 
-SELECT getSetting('max_threads');
+SYSTEM RELOAD FUNCTIONS; 
+
+SELECT name, origin 
+FROM system.functions 
+WHERE name in ('transaction_state', 'transaction_sum');
 
 
-clickhouse-benchmark --user username --password password -i 10 --query "SELECT * FROM my_database.uk_price_paid LIMIT 6000000 OFFSET 6000000"
+select transaction_id, price, quantity, transaction_sum(price, quantity)
+from my_database.transactions 
+where transaction_id = 100511426
+
+select 
+ 	transaction_id, 
+ 	price, 
+ 	quantity, 
+ 	transaction_sum(price, quantity), 
+ 	transaction_state(price, quantity, 50000)
+from my_database.transactions 
+where transaction_id = 100511426
+
+
+select 
+	count(1) cnt,
+ 	transaction_id
+from my_database.transactions 
+group by transaction_id
+having cnt > 1
 
