@@ -19,45 +19,70 @@ SELECT
 	now() - randUniform(1, 1000000.)
 FROM numbers(1000000);
 
-truncate table my_database.transactions
 
-select *
-from my_database.transactions
+INSERT INTO transactions
+	SELECT
+	    rand32() AS transaction_id,
+	    randUniform(1,1000)::Int AS user_id,
+	    randUniform(1,1000)::Int AS product_id,
+	    randUniform(1,10)::Int AS cnt,
+	    round( randUniform(15.5, 299.99), 2 ) AS price,
+	    now() - toIntervalSecond(rand() % (365 * 24 * 60 * 60)) AS datetime
+	FROM system.numbers 
+	LIMIT 1000;
 
-----------------
 
+SELECT *
+FROM transactions
+
+-------
+
+-- 744919.8599624634
+select sum(summ)
+from (
+select sum(price * quantity) summ, transaction_id
+from transactions
+group by transaction_id 
+)
+
+-- 744919.8599624634
 -- Рассчитайте общий доход от всех операций.
-select sum(price) 
-from my_database.transactions
+select sum(price * quantity) 
+from transactions
 
+-- 744.9198599624634
+select avg(summ)
+from (
+select sum(price * quantity) summ, transaction_id
+from transactions
+group by transaction_id 
+)
+
+-- 744.9198599624634
 -- Найдите средний доход с одной сделки.
-select avg(price / quantity), transaction_id
-from my_database.transactions
-group by transaction_id
+select avg(price * quantity)
+from transactions
 
 -- Определите общее количество проданной продукции.
 select sum(quantity)
-from my_database.transactions
+from transactions
 
 -- Подсчитайте количество уникальных пользователей, совершивших покупку.
 select count(distinct user_id)
-from my_database.transactions
-
-----------------
-
+from transactions
+  
 -- Преобразуйте `transaction_date` в строку формата `YYYY-MM-DD`.
-select formatDateTime(transaction_date, '%Y-%m-%d') as NewDateTime, transaction_date
-from my_database.transactions
+select formatDateTime(transaction_date, '%Y-%m-%d') as NewDateTime,
+	transaction_date
+from transactions
 
 select formatDateTime(now(), '%Y-%m-%d %H:%M:%S')
 
-
-
 -- Извлеките год и месяц из `transaction_date`.
-select toYear(transaction_date) AS Year, 
+select toYear(transaction_date) AS Year,
 	toMonth(transaction_date) AS Month,
 	transaction_date
-from my_database.transactions
+from transactions
 
 SELECT toDateTime('2021-04-21 10:20:30', 'Europe/Moscow') AS Time
 
@@ -65,23 +90,30 @@ SELECT toYear(now())
 
 SELECT toMonth(now())
 
-
 -- Округлите `price` до ближайшего целого числа.
 select round(price, 0), price
-from my_database.transactions
+from transactions
 
 SELECT round(123.4, 0) as res;
 
 SELECT round(123.5, 0) as res;
 
-
-
 -- Преобразуйте `transaction_id` в строку.
 select toString(transaction_id), transaction_id
-from my_database.transactions
+from transactions
 
 
-----------------
+-- Создайте простую UDF для расчета общей стоимости транзакции.
+-- Используйте созданную UDF для расчета общей цены для каждой транзакции.
+select transaction_sum(price, quantity), price, quantity, transaction_id
+from transactions;
+
+-- Создайте UDF для классификации транзакций на «высокоценные» и «малоценные» на основе порогового значения (например, 100). 
+-- Примените UDF для категоризации каждой транзакции.
+select transaction_state(price, quantity, 1000), price, quantity, transaction_id
+from transactions;
+
+
 
 SYSTEM RELOAD FUNCTIONS; 
 
