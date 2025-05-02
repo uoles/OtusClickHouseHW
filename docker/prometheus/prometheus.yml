@@ -1,5 +1,10 @@
+global:
+  scrape_interval: 10s
 scrape_configs:
-  - job_name: node
-    scrape_interval: 5s
+  - job_name: clickhouse
     static_configs:
-      - targets: ['node-exporter:9100']
+      - targets:
+        - clickhouse-server:9363
+    scrape_interval: 1m
+    scrape_timeout: 30s
+    metrics_path: "/metrics"

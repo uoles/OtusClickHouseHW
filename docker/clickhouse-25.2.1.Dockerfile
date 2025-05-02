@@ -6,6 +6,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -yq upgrade
 RUN apt-get install nano mc python3 pip kafkacat -y
 RUN pip install clickhouse_driver
 
+COPY clickhouse/prometheus.xml /etc/clickhouse-server/config.d/prometheus.xml
+
 EXPOSE 8123 9000
 
 ENTRYPOINT ["/entrypoint.sh"]
