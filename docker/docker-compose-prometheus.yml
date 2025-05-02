@@ -20,6 +20,8 @@ services:
       nofile:
         soft: 262144
         hard: 262144
+    networks:
+      - default
 
   prometheus:
     image: prom/prometheus:latest
@@ -34,6 +36,8 @@ services:
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
+    networks:
+      - default
 
   grafana:
     image: grafana/grafana
@@ -50,3 +54,12 @@ services:
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
+    networks:
+      - default
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
