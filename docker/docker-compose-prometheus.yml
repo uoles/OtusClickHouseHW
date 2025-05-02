@@ -1,6 +1,5 @@
 version: "3.6"
 
-name: prometheus_clickhouse
 services:
   clickhouse-server:
     container_name: uoles-clickhouse-prometheus
