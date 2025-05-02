@@ -34,10 +34,6 @@ services:
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
-    depends_on:
-      - clickhouse-server
-    links:
-      - clickhouse-server
 
   grafana:
     image: grafana/grafana
