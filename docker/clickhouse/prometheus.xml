@@ -1,6 +1,6 @@
 <clickhouse>
 	<prometheus>
-		<endpoint>/metrincs</endpoint>
+		<endpoint>/metrics</endpoint>
 		<port>9363</port>
 		<metrincs>true</metrincs>
 		<events>true</events>
