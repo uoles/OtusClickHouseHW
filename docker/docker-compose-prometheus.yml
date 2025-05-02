@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   clickhouse-server:
-    container_name: uoles-clickhouse-prometheus
+    container_name: clickhouse
     image: uoles/clickhouse:25.2.1
     hostname: clickhouse-server
     build:
