@@ -1,8 +1,10 @@
-<prometheus>
-	<endpoint>/metrincs</endpoint>
-	<port>9363</port>
-	<metrincs>true</metrincs>
-	<events>true</events>
-	<asynchronous_metrics>true</asynchronous_metrics>
-	<errors>true</errors>
-</prometheus>
+<clickhouse>
+	<prometheus>
+		<endpoint>/metrincs</endpoint>
+		<port>9363</port>
+		<metrincs>true</metrincs>
+		<events>true</events>
+		<asynchronous_metrics>true</asynchronous_metrics>
+		<errors>true</errors>
+	</prometheus>
+</clickhouse>
