@@ -8,6 +8,6 @@ RUN pip install clickhouse_driver
 
 COPY clickhouse/prometheus.xml /etc/clickhouse-server/config.d/prometheus.xml
 
-EXPOSE 8123 9000
+EXPOSE 8123 9000 9363
 
 ENTRYPOINT ["/entrypoint.sh"]

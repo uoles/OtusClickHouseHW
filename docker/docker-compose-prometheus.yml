@@ -4,6 +4,7 @@ services:
   clickhouse-server:
     container_name: uoles-clickhouse-prometheus
     image: uoles/clickhouse:25.2.1
+    hostname: clickhouse-server
     build:
       context: .
       dockerfile: clickhouse-25.2.1.Dockerfile
@@ -38,6 +39,10 @@ services:
       TZ: "Europe/Moscow"
     networks:
       - default
+    depends_on:
+      - clickhouse-server
+    links:
+      - clickhouse-server
 
   grafana:
     image: grafana/grafana
