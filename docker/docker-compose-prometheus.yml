@@ -24,41 +24,14 @@ services:
     networks:
       - default
 
-  prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - ./prometheus:/etc/prometheus/
-    container_name: prometheus
-    hostname: prometheus
-    command:
-      - --config.file=/etc/prometheus/prometheus.yml
+  minio:
+    image: 'bitnami/minio:latest'
     ports:
-      - 9090:9090
-    restart: unless-stopped
+      - '9000:9002'
+      - '9001:9001'
     environment:
-      TZ: "Europe/Moscow"
-    networks:
-      - default
-    depends_on:
-      - clickhouse-server
-    links:
-      - clickhouse-server
-
-  grafana:
-    image: grafana/grafana
-    user: root
-    depends_on:
-      - prometheus
-    ports:
-      - 3000:3000
-    volumes:
-      - ./grafana:/var/lib/grafana
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
-    container_name: grafana
-    hostname: grafana
-    restart: unless-stopped
-    environment:
-      TZ: "Europe/Moscow"
+      - MINIO_ROOT_USER=minio-root-user
+      - MINIO_ROOT_PASSWORD=minio-root-password
     networks:
       - default
 
