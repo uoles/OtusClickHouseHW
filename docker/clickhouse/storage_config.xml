@@ -3,7 +3,7 @@
         <disks>
             <s3_disk>
                 <type>s3</type>
-                <endpoint>http://minio:9001/clickhouse/</endpoint>
+                <endpoint>http://minio:10000/clickhouse/</endpoint>
                 <access_key_id>minio-root-user</access_key_id>
                 <secret_access_key>minio-root-password</secret_access_key>
                 <metadata_path>/var/lib/clickhouse/disks/s3_disk/</metadata_path>
