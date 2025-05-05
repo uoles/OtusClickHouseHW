@@ -21,8 +21,8 @@ services:
         soft: 262144
         hard: 262144
     depends_on:
-      - minio
-      - createbuckets
+      minio:
+        condition: service_healthy
     links:
       - minio
     networks:
@@ -41,12 +41,16 @@ services:
       - MINIO_ROOT_PASSWORD=minio-root-password
     networks:
       - default
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:10001" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   createbuckets:
     image: minio/mc
     entrypoint: >
       /bin/sh -c "
-      sleep 5;
       /usr/bin/mc alias set myminio http://minio:10000 minio-root-user minio-root-password;
       /usr/bin/mc admin info myminio;
       /usr/bin/mc mb myminio/clickhouse;
@@ -54,7 +58,8 @@ services:
       exit 0;
       "
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
     links:
       - minio
     networks:
