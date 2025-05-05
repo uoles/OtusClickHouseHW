@@ -46,7 +46,7 @@ services:
     image: minio/mc
     entrypoint: >
       /bin/sh -c "
-      sleep 1000;
+      sleep 10;
       /usr/bin/mc alias set myminio http://minio:10000 minio-root-user minio-root-password;
       /usr/bin/mc admin info myminio;
       /usr/bin/mc mb myminio/clickhouse;
