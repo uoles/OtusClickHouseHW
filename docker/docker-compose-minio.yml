@@ -42,8 +42,6 @@ services:
 
   createbuckets:
     image: minio/mc
-    depends_on:
-      - minio
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set myminio http://minio:10000 minio-root-user minio-root-password;
@@ -52,6 +50,10 @@ services:
       /usr/bin/mc policy set public myminio/clickhouse;
       exit 0;
       "
+    depends_on:
+      - minio
+    links:
+      - minio
     networks:
       - default
 
