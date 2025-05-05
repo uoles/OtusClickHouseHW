@@ -29,8 +29,8 @@ services:
     hostname: minio
     command: server --address 0.0.0.0:10000 --console-address 0.0.0.0:10001 /data
     ports:
-      - '10000:10000'
-      - '10001:10001'
+      - "10000:10000"
+      - "10001:10001"
     environment:
       - MINIO_ROOT_USER=minio-root-user
       - MINIO_ROOT_PASSWORD=minio-root-password
