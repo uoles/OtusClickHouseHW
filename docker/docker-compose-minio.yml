@@ -20,11 +20,13 @@ services:
       nofile:
         soft: 262144
         hard: 262144
-    networks:
-      - default
     depends_on:
       - minio
       - createbuckets
+    links:
+      - minio
+    networks:
+      - default
 
   minio:
     image: quay.io/minio/minio
