@@ -16,7 +16,6 @@ services:
     ports:
       - "18123:8123"
       - "19000:9000"
-      - "19363:9363"
     ulimits:
       nofile:
         soft: 262144
@@ -25,13 +24,31 @@ services:
       - default
 
   minio:
-    image: 'bitnami/minio:latest'
+    image: bitnami/minio:latest
+    container_name: minio
+    hostname: minio
+    command: server --address 0.0.0.0:10000 --console-address 0.0.0.0:10001 /data
     ports:
-      - '9000:9002'
-      - '9001:9001'
+      - '10000:10000'
+      - '10001:10001'
     environment:
       - MINIO_ROOT_USER=minio-root-user
       - MINIO_ROOT_PASSWORD=minio-root-password
+    networks:
+      - default
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:10000 minio-root-user minio-root-password;
+      /usr/bin/mc admin info myminio;
+      /usr/bin/mc mb myminio/clickhouse;
+      /usr/bin/mc policy set public myminio/clickhouse;
+      exit 0;
+      "
     networks:
       - default
 
