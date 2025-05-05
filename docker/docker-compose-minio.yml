@@ -24,7 +24,7 @@ services:
       - default
 
   minio:
-    image: bitnami/minio:latest
+    image: quay.io/minio/minio
     container_name: minio
     hostname: minio
     command: server --address 0.0.0.0:10000 --console-address 0.0.0.0:10001 /data
