@@ -1,0 +1,15 @@
+мая-06 17:37:41	SQL / User	SELECT * FROM test_table	0.349s	5	Успешно
+мая-06 17:36:55	SQL / User	RESTORE TABLE test_table FROM Disk('s3_plain', 'cloud_backup')	0.188s	1	Успешно
+мая-06 17:35:16	SQL / User	SELECT * FROM test_table	0.411s		Успешно
+мая-06 17:35:11	SQL / User	TRUNCATE TABLE test_table	0.226s	0	Успешно
+мая-06 17:33:02	SQL / User	BACKUP TABLE test_table TO Disk('s3_plain', 'cloud_backup')	0.639s	1	Успешно
+мая-06 17:31:58	SQL / User	SELECT * FROM test_table	0.422s	5	Успешно
+мая-06 17:31:54	SQL / User	INSERT INTO test_table (id, column1)
+VALUES (1, 'test1'), (2, 'test2'), (3, 'test3'), (4, 'test4'), (5, 'test5')	0.299s	5	Успешно
+мая-06 17:29:46	SQL / User	CREATE TABLE test_table
+  (
+    `id` UInt64,
+    `column1` String
+  )
+ENGINE = MergeTree
+ORDER BY id	0.084s	0	Успешно
