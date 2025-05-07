@@ -10,9 +10,9 @@ RUN mkdir /tmp/clickhouse-backup \
 	&& cd /tmp/clickhouse-backup \
 	&& wget https://github.com/Altinity/clickhouse-backup/releases/download/v2.6.16/clickhouse-backup-linux-amd64.tar.gz \
 	&& tar -xf clickhouse-backup-linux-amd64.tar.gz \
-	&& install -o root -g root -m 0755 build/linux/amd64/clickhouse-backup /usr/local/bin
+	&& install -o root -g root -m 0755 build/linux/amd64/clickhouse-backup /usr/local/bin \
+    && mkdir /etc/clickhouse-backup
 
-RUN mkdir /etc/clickhouse-backup
 COPY clickhouse/clickhouse-backup/config.yml /etc/clickhouse-backup/config.yml
 
 EXPOSE 8123 9000
