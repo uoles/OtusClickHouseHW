@@ -13,7 +13,7 @@ RUN mkdir /tmp/clickhouse-backup \
 	&& install -o root -g root -m 0755 build/linux/amd64/clickhouse-backup /usr/local/bin
 
 RUN mkdir /etc/clickhouse-backup
-COPY clickhouse/clickhouse-backup/config.xml /etc/clickhouse-backup/config.yml
+COPY clickhouse/clickhouse-backup/config.yml /etc/clickhouse-backup/config.yml
 
 EXPOSE 8123 9000
 
