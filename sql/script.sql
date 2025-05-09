@@ -1,37 +1,53 @@
-CREATE TABLE test_table
-  (
-    `id` UInt64,
-    `column1` String
-  )
-ENGINE = MergeTree
-ORDER BY id; 
 
-INSERT INTO test_table (id, column1)
-VALUES (1, 'test1'), (2, 'test2'), (3, 'test3'), (4, 'test4'), (5, 'test5');
 
-SELECT * FROM test_table;
+SHOW USERS
 
-TRUNCATE TABLE test_table;
+SELECT name,
+	auth_type,
+	auth_params
+FROM system.users 
+WHERE storage = 'local_directory'
 
-BACKUP TABLE test_table TO Disk('s3_plain', 'cloud_backup');
+SELECT *
+FROM system.roles
 
-RESTORE TABLE test_table FROM Disk('s3_plain', 'cloud_backup');
+SELECT *
+FROM system.role_grants
 
------------
+SELECT *
+FROM system.grants
+WHERE user_name = 'jhon'
 
-CREATE TABLE test_table_2
-  (
-    `id` UInt64,
-    `column1` String
-  )
-ENGINE = MergeTree
-ORDER BY id; 
+----
 
-INSERT INTO test_table_2 (id, column1)
-VALUES (1, 'test1'), (2, 'test2'), (3, 'test3'), (4, 'test4'), (5, 'test5'), (6, 'test6'), (7, 'test7');
+CREATE USER test_user IDENTIFIED WITH sha256_password BY 'test_password'
 
-SELECT * FROM test_table_2;
+DROP USER test_user
 
-TRUNCATE TABLE test_table_2;
+----
 
-DROP TABLE test_table_2 SYNC
+CREATE USER jhon IDENTIFIED WITH sha256_password BY 'qwerty'
+
+CREATE ROLE devs;
+
+GRANT devs TO jhon;
+
+REVOKE devs FROM jhon;
+
+GRANT SELECT ON my_database.* TO devs;
+
+----
+
+SELECT 
+  grants.user_name,
+  grants.role_name,
+  users.name AS role_member,
+  grants.access_type,
+  grants.database,
+  grants.table
+FROM system.grants 
+LEFT JOIN system.role_grants ON grants.role_name = role_grants.granted_role_name
+LEFT JOIN system.users ON role_grants.user_name = users.name
+WHERE users.name = 'jhon'
+  
+
