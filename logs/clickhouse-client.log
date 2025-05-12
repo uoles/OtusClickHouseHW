@@ -1,0 +1,227 @@
+
+root@4694741-uoles:~# docker exec -it clickhouse-server bash
+root@f255c4e34d10:/# clickhouse-client --user username --password password
+ClickHouse client version 25.4.1.2934 (official build).
+Connecting to localhost:9000 as user username.
+Connected to ClickHouse server version 25.4.1.
+
+Warnings:
+ * Linux transparent hugepages are set to "always". Check /sys/kernel/mm/transparent_hugepage/enabled
+ * Linux threads max count is too low. Check /proc/sys/kernel/threads-max
+ * Delay accounting is not enabled, OSIOWaitMicroseconds will not be gathered. You can enable it using `echo 1 > /proc/sys/kernel/task_delayacct` or by using sysctl.
+ * Available memory at server startup is too low (2GiB).
+
+f255c4e34d10 :) set send_logs_level='trace'; select *
+from my_database.uk_price_paid
+where addr2 = 'PLOT';
+
+
+SET send_logs_level = 'trace'
+
+Query id: 91f4bb7f-029f-4e61-a570-5c5023c76f16
+
+Ok.
+
+0 rows in set. Elapsed: 0.003 sec.
+
+
+SELECT *
+FROM my_database.uk_price_paid
+WHERE addr2 = 'PLOT'
+
+Query id: a82b954c-7aa9-48ec-9081-308c2400e836
+
+[f255c4e34d10] 2025.05.11 13:53:12.839536 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Debug> executeQuery: (from 127.0.0.1:60446, user: username) (query 2, line 1) select * from my_database.uk_price_paid where addr2 = 'PLOT'; (stage: Complete)
+[f255c4e34d10] 2025.05.11 13:53:12.839986 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> Planner: Query to stage Complete
+[f255c4e34d10] 2025.05.11 13:53:12.840180 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> Planner: Query from stage FetchColumns to stage Complete
+[f255c4e34d10] 2025.05.11 13:53:12.840927 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> QueryPlanOptimizePrewhere: The min valid primary key position for moving to the tail of PREWHERE is -1
+[f255c4e34d10] 2025.05.11 13:53:12.840953 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> QueryPlanOptimizePrewhere: Moved 1 conditions to PREWHERE
+[f255c4e34d10] 2025.05.11 13:53:12.841071 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Debug> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Key condition: (column 3 in ['PLOT', 'PLOT'])
+[f255c4e34d10] 2025.05.11 13:53:12.841097 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Filtering marks by primary and secondary keys
+[f255c4e34d10] 2025.05.11 13:53:12.841137 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Used generic exclusion search over index for part all_1_1_0 with 19 steps
+[f255c4e34d10] 2025.05.11 13:53:12.841167 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> QueryConditionCache: Read entry for table_uuid: 6e7b31aa-a3d2-4173-a918-8a6de69e2962, part: all_1_1_0, condition_hash: 15565309393588196737
+[f255c4e34d10] 2025.05.11 13:53:12.841183 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Debug> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Query condition cache has dropped 8/12 granules for PREWHERE condition equals(__table1.addr2, 'PLOT'_String).
+[f255c4e34d10] 2025.05.11 13:53:12.841201 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Debug> QueryConditionCache: Could not find entry for table_uuid: 6e7b31aa-a3d2-4173-a918-8a6de69e2962, part: all_1_1_0, condition_hash: 14577893117438637781
+[f255c4e34d10] 2025.05.11 13:53:12.841218 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Debug> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Query condition cache has dropped 0/4 granules for WHERE condition equals(addr2, 'PLOT'_String).
+[f255c4e34d10] 2025.05.11 13:53:12.841243 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Debug> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Selected 1/1 parts by partition key, 1 parts by primary key, 12/12 marks by primary key, 4 marks to read from 3 ranges
+[f255c4e34d10] 2025.05.11 13:53:12.841263 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Spreading mark ranges among streams (default reading)
+[f255c4e34d10] 2025.05.11 13:53:12.841352 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Reading 3 ranges in order from part all_1_1_0, approx. 32768 rows starting from 0
+[f255c4e34d10] 2025.05.11 13:53:12.841378 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> MergeTreeSelectProcessor: PREWHERE condition was split into 1 steps
+[f255c4e34d10] 2025.05.11 13:53:12.850827 [ 1444 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> QueryConditionCache: Updated entry for table_id: 6e7b31aa-a3d2-4173-a918-8a6de69e2962, part_name: all_1_1_0, condition_hash: 15565309393588196737, condition: , marks_count: 13, has_final_mark: true
+[f255c4e34d10] 2025.05.11 13:53:12.850926 [ 1444 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Trace> MergeTreeSelectProcessor: Read steps statistics: step 0 rows_read: 32768, step 1 rows_read: 32768
+[f255c4e34d10] 2025.05.11 13:53:12.851971 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Debug> executeQuery: Read 32768 rows, 2.01 MiB in 0.012456 sec., 2630700.064226076 rows/sec., 161.60 MiB/sec.
+[f255c4e34d10] 2025.05.11 13:53:12.852313 [ 769 ] {a82b954c-7aa9-48ec-9081-308c2400e836} <Debug> MemoryTracker: Query peak memory usage: 2.83 MiB.
+   ┌──price─┬───────date─┬─postcode1─┬─postcode2─┬─type─────┬─is_new─┬─duration─┬─addr1─┬─addr2─┬─street───────────┬─locality──┬─town──────────┬─district──────────────┬─county────────────────┐
+1. │  40000 │ 2023-05-24 │           │           │ other    │      0 │ freehold │ 1     │ PLOT  │ BUNKERS HILL     │ BADBY     │ DAVENTRY      │ WEST NORTHAMPTONSHIRE │ WEST NORTHAMPTONSHIRE │
+2. │  25000 │ 2024-04-29 │           │           │ other    │      0 │ freehold │ A58   │ PLOT  │ CHEVENING ROAD   │ CHIPSTEAD │ SEVENOAKS     │ SEVENOAKS             │ KENT                  │
+3. │ 160000 │ 2024-03-06 │ EN8       │ 0EJ       │ other    │      0 │ freehold │ C     │ PLOT  │ WHITEFIELDS ROAD │ CHESHUNT  │ WALTHAM CROSS │ BROXBOURNE            │ HERTFORDSHIRE         │
+4. │ 120000 │ 2024-04-30 │ LA19      │ 5AD       │ other    │      0 │ freehold │ 7     │ PLOT  │ WELLBANK PARK    │ BOOTLE    │ MILLOM        │ CUMBERLAND            │ CUMBERLAND            │
+5. │ 125000 │ 2025-01-10 │ LA19      │ 5AD       │ other    │      0 │ freehold │ 9     │ PLOT  │ WELLBANK PARK    │ BOOTLE    │ MILLOM        │ CUMBERLAND            │ CUMBERLAND            │
+6. │  63261 │ 2024-05-01 │ S73       │ 0FU       │ terraced │      1 │ freehold │ 224   │ PLOT  │ THE FAIRWAYS     │ WOMBWELL  │ BARNSLEY      │ BARNSLEY              │ SOUTH YORKSHIRE       │
+   └────────┴────────────┴───────────┴───────────┴──────────┴────────┴──────────┴───────┴───────┴──────────────────┴───────────┴───────────────┴───────────────────────┴───────────────────────┘
+
+6 rows in set. Elapsed: 0.013 sec. Processed 32.77 thousand rows, 2.11 MB (2.59 million rows/s., 167.07 MB/s.)
+Peak memory usage: 2.83 MiB.
+
+f255c4e34d10 :) select *
+from my_database.uk_price_paid
+where price = 14000;
+
+SELECT *
+FROM my_database.uk_price_paid
+WHERE price = 14000
+
+Query id: 09b46531-e1ae-418d-a429-c06640829ea3
+
+[f255c4e34d10] 2025.05.11 14:13:29.537506 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Debug> executeQuery: (from 127.0.0.1:60446, user: username) (query 1, line 1) select * from my_database.uk_price_paid where price = 14000; (stage: Complete)
+[f255c4e34d10] 2025.05.11 14:13:29.538070 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> Planner: Query to stage Complete
+[f255c4e34d10] 2025.05.11 14:13:29.538379 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> Planner: Query from stage FetchColumns to stage Complete
+[f255c4e34d10] 2025.05.11 14:13:29.539507 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> QueryPlanOptimizePrewhere: The min valid primary key position for moving to the tail of PREWHERE is -1
+[f255c4e34d10] 2025.05.11 14:13:29.539542 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> QueryPlanOptimizePrewhere: Moved 1 conditions to PREWHERE
+[f255c4e34d10] 2025.05.11 14:13:29.539680 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Debug> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Key condition: unknown
+[f255c4e34d10] 2025.05.11 14:13:29.539719 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Filtering marks by primary and secondary keys
+[f255c4e34d10] 2025.05.11 14:13:29.539764 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> QueryConditionCache: Read entry for table_uuid: 6e7b31aa-a3d2-4173-a918-8a6de69e2962, part: all_1_1_0, condition_hash: 7185031449192249839
+[f255c4e34d10] 2025.05.11 14:13:29.539784 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Debug> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Query condition cache has dropped 7/12 granules for PREWHERE condition equals(__table1.price, 14000_UInt16).
+[f255c4e34d10] 2025.05.11 14:13:29.539824 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Debug> QueryConditionCache: Could not find entry for table_uuid: 6e7b31aa-a3d2-4173-a918-8a6de69e2962, part: all_1_1_0, condition_hash: 933907334030584911
+[f255c4e34d10] 2025.05.11 14:13:29.539839 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Debug> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Query condition cache has dropped 0/5 granules for WHERE condition equals(price, 14000_UInt16).
+[f255c4e34d10] 2025.05.11 14:13:29.539861 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Debug> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Selected 1/1 parts by partition key, 1 parts by primary key, 12/12 marks by primary key, 5 marks to read from 5 ranges
+[f255c4e34d10] 2025.05.11 14:13:29.539882 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Spreading mark ranges among streams (default reading)
+[f255c4e34d10] 2025.05.11 14:13:29.539979 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> my_database.uk_price_paid (6e7b31aa-a3d2-4173-a918-8a6de69e2962) (SelectExecutor): Reading 5 ranges in order from part all_1_1_0, approx. 40960 rows starting from 0
+[f255c4e34d10] 2025.05.11 14:13:29.540018 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> MergeTreeSelectProcessor: PREWHERE condition was split into 1 steps
+[f255c4e34d10] 2025.05.11 14:13:29.553576 [ 1465 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> QueryConditionCache: Updated entry for table_id: 6e7b31aa-a3d2-4173-a918-8a6de69e2962, part_name: all_1_1_0, condition_hash: 7185031449192249839, condition: , marks_count: 13, has_final_mark: true
+[f255c4e34d10] 2025.05.11 14:13:29.553700 [ 1465 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Trace> MergeTreeSelectProcessor: Read steps statistics: step 0 rows_read: 40960, step 1 rows_read: 40960
+[f255c4e34d10] 2025.05.11 14:13:29.554188 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Debug> executeQuery: Read 40960 rows, 2.52 MiB in 0.016765 sec., 2443185.2072770656 rows/sec., 150.08 MiB/sec.
+[f255c4e34d10] 2025.05.11 14:13:29.554576 [ 769 ] {09b46531-e1ae-418d-a429-c06640829ea3} <Debug> MemoryTracker: Query peak memory usage: 4.00 MiB.
+   ┌─price─┬───────date─┬─postcode1─┬─postcode2─┬─type──┬─is_new─┬─duration──┬─addr1─────┬─addr2─┬─street─────────┬─locality───────────┬─town──────────┬─district───┬─county──────────┐
+1. │ 14000 │ 2024-08-02 │           │           │ other │      0 │ leasehold │ GARAGE 37 │       │ BOREHAM HOLT   │ ELSTREE            │ BOREHAMWOOD   │ HERTSMERE  │ HERTFORDSHIRE   │
+2. │ 14000 │ 2023-05-11 │           │           │ other │      0 │ freehold  │ KLA 61    │       │ BARNES LANE    │                    │ KINGS LANGLEY │ DACORUM    │ HERTFORDSHIRE   │
+3. │ 14000 │ 2023-11-21 │ GL20      │ 8HB       │ other │      0 │ leasehold │ UNIT 5A   │       │ DELTA DRIVE    │                    │ TEWKESBURY    │ TEWKESBURY │ GLOUCESTERSHIRE │
+4. │ 14000 │ 2021-02-04 │ LA3       │ 1TQ       │ other │      0 │ leasehold │ 23A       │       │ ALEXANDRA ROAD │                    │ MORECAMBE     │ LANCASTER  │ LANCASHIRE      │
+5. │ 14000 │ 2016-12-12 │ LE8       │ 0JG       │ other │      0 │ freehold  │ 23E       │       │ WHITE STREET   │ KIBWORTH BEAUCHAMP │ LEICESTER     │ LEICESTER  │ LEICESTER       │
+6. │ 14000 │ 2024-03-01 │ PL13      │ 2JA       │ other │      0 │ freehold  │ THE BAY   │ 8     │                │ TALLAND BAY        │ LOOE          │ CORNWALL   │ CORNWALL        │
+7. │ 14000 │ 2024-06-07 │ SW15      │ 1PH       │ other │      0 │ freehold  │ 67        │       │ NORROY ROAD    │ PUTNEY             │ LONDON        │ WANDSWORTH │ GREATER LONDON  │
+   └───────┴────────────┴───────────┴───────────┴───────┴────────┴───────────┴───────────┴───────┴────────────────┴────────────────────┴───────────────┴────────────┴─────────────────┘
+
+7 rows in set. Elapsed: 0.017 sec. Processed 40.96 thousand rows, 2.64 MB (2.40 million rows/s., 154.67 MB/s.)
+Peak memory usage: 4.00 MiB.
+
+f255c4e34d10 :)
+
+
+
+root@4694741-uoles:~# docker exec -it clickhouse-server bash
+root@f255c4e34d10:/# clickhouse-client --user username --password password
+ClickHouse client version 25.4.1.2934 (official build).
+Connecting to localhost:9000 as user username.
+Connected to ClickHouse server version 25.4.1.
+
+Warnings:
+ * Linux transparent hugepages are set to "always". Check /sys/kernel/mm/transparent_hugepage/enabled
+ * Linux threads max count is too low. Check /proc/sys/kernel/threads-max
+ * Delay accounting is not enabled, OSIOWaitMicroseconds will not be gathered. You can enable it using `echo 1 > /proc/sys/kernel/task_delayacct` or by using sysctl.
+ * Available memory at server startup is too low (2GiB).
+
+f255c4e34d10 :)  set send_logs_level='none';
+
+SET send_logs_level = 'none'
+
+Query id: 720654f4-4b77-49d2-8c0e-74a2d5729557
+
+Ok.
+
+0 rows in set. Elapsed: 0.002 sec.
+
+f255c4e34d10 :)
+
+root@4694741-uoles:~# docker exec -it clickhouse-server clickhouse-client --user username --password password
+ClickHouse client version 25.4.1.2934 (official build).
+Connecting to localhost:9000 as user username.
+Connected to ClickHouse server version 25.4.1.
+
+Warnings:
+ * Linux transparent hugepages are set to "always". Check /sys/kernel/mm/transparent_hugepage/enabled
+ * Linux threads max count is too low. Check /proc/sys/kernel/threads-max
+ * Delay accounting is not enabled, OSIOWaitMicroseconds will not be gathered. You can enable it using `echo 1 > /proc/sys/kernel/task_delayacct` or by using sysctl.
+ * Available memory at server startup is too low (2GiB).
+
+f255c4e34d10 :) EXPLAIN indexes = 1
+select *
+from my_database.uk_price_paid
+where addr2 = 'PLOT';
+
+
+EXPLAIN indexes = 1
+SELECT *
+FROM my_database.uk_price_paid
+WHERE addr2 = 'PLOT'
+
+Query id: 5053c656-73a8-493b-a493-1d6283eb019c
+
+    ┌─explain───────────────────────────────────────────┐
+ 1. │ Expression ((Project names + Projection))         │
+ 2. │   Expression                                      │
+ 3. │     ReadFromMergeTree (my_database.uk_price_paid) │
+ 4. │     Indexes:                                      │
+ 5. │       PrimaryKey                                  │
+ 6. │         Keys:                                     │
+ 7. │           addr2                                   │
+ 8. │         Condition: (addr2 in ['PLOT', 'PLOT'])    │
+ 9. │         Parts: 1/1                                │
+10. │         Granules: 12/12                           │
+    └───────────────────────────────────────────────────┘
+
+10 rows in set. Elapsed: 0.007 sec.
+
+f255c4e34d10 :) EXPLAIN indexes = 1
+select *
+from my_database.uk_price_paid
+where price = 14000;
+
+EXPLAIN indexes = 1
+SELECT *
+FROM my_database.uk_price_paid
+WHERE price = 14000
+
+Query id: d8692e34-4fe8-4c53-af49-6e7e45e476be
+
+   ┌─explain───────────────────────────────────────────┐
+1. │ Expression ((Project names + Projection))         │
+2. │   Expression                                      │
+3. │     ReadFromMergeTree (my_database.uk_price_paid) │
+4. │     Indexes:                                      │
+5. │       PrimaryKey                                  │
+6. │         Condition: true                           │
+7. │         Parts: 1/1                                │
+8. │         Granules: 12/12                           │
+   └───────────────────────────────────────────────────┘
+
+8 rows in set. Elapsed: 0.005 sec.
+
+f255c4e34d10 :) EXPLAIN indexes = 1
+select count(*)
+from my_database.uk_price_paid
+where price = 14000;
+
+EXPLAIN indexes = 1
+SELECT count(*)
+FROM my_database.uk_price_paid
+WHERE price = 14000
+
+Query id: 2f7b1f3b-9eb3-4b7d-83f5-9ee37e99b580
+
+    ┌─explain────────────────────────────────────────────────────────────┐
+ 1. │ Expression ((Project names + Projection))                          │
+ 2. │   Aggregating                                                      │
+ 3. │     Expression (Before GROUP BY)                                   │
+ 4. │       Filter ((WHERE + Change column names to column identifiers)) │
+ 5. │         ReadFromMergeTree (my_database.uk_price_paid)              │
+ 6. │         Indexes:                                                   │
+ 7. │           PrimaryKey                                               │
+ 8. │             Condition: true                                        │
+ 9. │             Parts: 1/1                                             │
+10. │             Granules: 12/12                                        │
+    └────────────────────────────────────────────────────────────────────┘
+
+10 rows in set. Elapsed: 0.012 sec.
+
+f255c4e34d10 :)
